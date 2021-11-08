@@ -30,7 +30,7 @@ jobs:
         with:
           registry: ghcr.io
           username: Becram
-          password: ${{ secrets.GHCR_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish image
         uses: docker/build-push-action@v2
         with:
