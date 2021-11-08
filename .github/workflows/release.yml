@@ -42,7 +42,7 @@ jobs:
           build-args: |
             REVISON=${{ github.sha }}
           tags: |
-            ghcr.io/Becram/argocd-image-customized:${{ steps.prep.outputs.VERSION }}
+            ghcr.io/becram/argocd-image-customized:${{ steps.prep.outputs.VERSION }}
           labels: |
             org.opencontainers.image.title=${{ github.event.repository.name }}
             org.opencontainers.image.description=${{ github.event.repository.description }}
