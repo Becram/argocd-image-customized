@@ -14,8 +14,8 @@ jobs:
       - name: Prepare
         id: prep
         run: |
-          CHANGELOG="https://github.com/Becram/flagger/blob/main/CHANGELOG.md#$(echo $VERSION | tr -d '.')"
           echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          echo ::set-output name=VERSION::$(echo $GITHUB_REF)
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v1
         with:
