@@ -7,7 +7,8 @@ on:
       - main
   push:
     branches:
-      - mainjobs:
+      - main
+jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
