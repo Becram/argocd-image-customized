@@ -1,0 +1,63 @@
+name: release
+on:
+  push:
+    branch:
+      - main
+        # tags:
+      # - 'v*'
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare
+        id: prep
+        run: |
+          CHANGELOG="https://github.com/Becram/flagger/blob/main/CHANGELOG.md#$(echo $VERSION | tr -d '.')"
+          echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: all
+      - name: Setup Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+        with: 
+          buildkitd-flags: "--debug"
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: Becram
+          password: ${{ secrets.GHCR_TOKEN }}
+      - name: Publish image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          build-args: |
+            REVISON=${{ github.sha }}
+          tags: |
+            ghcr.io/Becram/argocd:${{ steps.prep.outputs.VERSION }}
+          labels: |
+            org.opencontainers.image.title=${{ github.event.repository.name }}
+            org.opencontainers.image.description=${{ github.event.repository.description }}
+            org.opencontainers.image.url=${{ github.event.repository.html_url }}
+            org.opencontainers.image.source=${{ github.event.repository.html_url }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.created=${{ steps.prep.outputs.BUILD_DATE }}
+      - name: Create release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: false
+          prerelease: false
+          body: |
+            [CHANGELOG](${{ steps.prep.outputs.CHANGELOG }})
