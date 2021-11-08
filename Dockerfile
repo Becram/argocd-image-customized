@@ -1,5 +1,5 @@
-ARG ARGOCD_VERSION=v2.0.4
-ARG HELM_SECRETS_VERSION=v3.8.2
+ARG ARGOCD_VERSION=v2.1.6
+ARG HELM_SECRETS_VERSION=v3.10.0
 ARG SOPS_VERSION=v3.7.1
 FROM argoproj/argocd:${ARGOCD_VERSION}
 # Switch to root for the ability to perform install
