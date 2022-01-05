@@ -20,6 +20,6 @@ RUN curl -o /usr/local/bin/sops -L https://github.com/mozilla/sops/releases/down
 
 # Switch back to non-root user
 USER argocd
-RUN helm plugin install https://github.com/jkroepke/helm-secrets --version ${HELM_SECRETS_VERSION}
+RUN helm plugin install https://github.com/jkroepke/helm-secrets --version v3.10.0
 # helm secrets plugin should be installed as user argocd or it won't be found
 ENV HELM_PLUGINS="/home/argocd/.local/share/helm/plugins/"
