@@ -1,4 +1,4 @@
-ARG ARGOCD_VERSION=v2.1.6
+ARG ARGOCD_VERSION=v2.2.2
 ARG HELM_SECRETS_VERSION=v3.10.0
 ARG SOPS_VERSION=v3.7.1
 FROM argoproj/argocd:${ARGOCD_VERSION}
@@ -15,11 +15,11 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN curl -o /usr/local/bin/sops -L https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux && \
+RUN curl -o /usr/local/bin/sops -L https://github.com/mozilla/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux && \
     chmod +x /usr/local/bin/sops
 
 # Switch back to non-root user
 USER argocd
-RUN helm plugin install https://github.com/jkroepke/helm-secrets --version v3.8.2
+RUN helm plugin install https://github.com/jkroepke/helm-secrets --version ${HELM_SECRETS_VERSION}
 # helm secrets plugin should be installed as user argocd or it won't be found
 ENV HELM_PLUGINS="/home/argocd/.local/share/helm/plugins/"
