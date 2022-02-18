@@ -1,5 +1,4 @@
 ARG ARGOCD_VERSION=v2.2.5
-ARG SOPS_VERSION=v3.7.1
 ARG KSOPS_VERSION=v3.0.1
 
 FROM viaductoss/ksops:$KSOPS_VERSION as ksops-builder
@@ -18,8 +17,9 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+ARG SOPS_VERSION=v3.7.1
 RUN curl -o /usr/local/bin/sops -L https://github.com/mozilla/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux && \
-    chmod +x /usr/local/bin/sops
+    chmod +x /usr/local/bin/sops && /usr/local/bin/sops --version
 
 #configure ksops
 # Set the kustomize home directory
