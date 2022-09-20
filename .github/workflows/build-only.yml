@@ -2,6 +2,7 @@ name: Build Only
 on:
   push: 
     branches:
+    - "*"
     - '!main'
 
 jobs:
