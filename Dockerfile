@@ -1,6 +1,6 @@
 ARG ARGOCD_VERSION=v2.4.12
 
-ARG KSOPS_VERSION=v3.0.1
+ARG KSOPS_VERSION=v3.0.2
 
 FROM viaductoss/ksops:$KSOPS_VERSION as ksops-builder
 
@@ -15,7 +15,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends build-essential curl  awscli  gpg && \
     rm -rf /var/lib/apt/lists/*
 
-ARG SOPS_VERSION=v3.7.1
+ARG SOPS_VERSION=v3.7.3
 
 RUN curl -o /usr/local/bin/sops -L https://github.com/mozilla/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux && \
     chmod +x /usr/local/bin/sops && /usr/local/bin/sops --version
