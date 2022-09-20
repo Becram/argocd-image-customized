@@ -1,4 +1,4 @@
-ARG ARGOCD_VERSION=v2.2.5
+ARG ARGOCD_VERSION=v2.3.2
 
 ARG KSOPS_VERSION=v3.0.1
 
@@ -10,13 +10,11 @@ USER root
 
 # Install tools needed for your repo-server to retrieve & decrypt secrets, render manifests
 # (e.g. curl, awscli, gpg, sops)
+
 RUN apt-get update && \
-    apt-get install -y \
-        curl \
-        awscli \
-        gpg && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    apt-get install -y --no-install-recommends build-essential curl  awscli  gpg && \
+    rm -rf /var/lib/apt/lists/*
+
 ARG SOPS_VERSION=v3.7.1
 
 RUN curl -o /usr/local/bin/sops -L https://github.com/mozilla/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux && \
