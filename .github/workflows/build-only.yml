@@ -1,0 +1,18 @@
+name: Build Only
+on:
+  push: 
+    branches:
+    - '**'
+    - '!main'
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build image
+        run : docker build -t becram/argocd:latest .
