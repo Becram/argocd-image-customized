@@ -12,7 +12,7 @@ USER root
 # (e.g. curl, awscli, gpg, sops)
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends build-essential curl  awscli  gpg && \
+    apt-get install -y --no-install-recommends build-essential curl  awscli azure-cli gpg && \
     rm -rf /var/lib/apt/lists/*
 
 ARG SOPS_VERSION=v3.7.3
