@@ -2,10 +2,6 @@ ARG ARGOCD_VERSION=v2.4.12
 
 ARG KSOPS_VERSION=v3.0.2
 
-ARG AZURE_CLI_VERSION=2.9.1
-
-FROM  mcr.microsoft.com/azure-cli:${AZURE_CLI_VERSION} as azure-cli
-
 FROM viaductoss/ksops:$KSOPS_VERSION as ksops-builder
 
 FROM argoproj/argocd:${ARGOCD_VERSION}
@@ -34,12 +30,11 @@ ARG PKG_NAME=ksops
 # Override the default kustomize executable with the Go built version
 COPY --from=ksops-builder /go/bin/kustomize /usr/local/bin/kustomize
 
-COPY --from=azure-cli /usr/local/bin/az /usr/local/bin/az
-
 # Copy the plugin to kustomize plugin path
 COPY --from=ksops-builder /go/src/github.com/viaduct-ai/kustomize-sops/*  $KUSTOMIZE_PLUGIN_PATH/viaduct.ai/v1/${PKG_NAME}/
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
-
+RUN az version
 # Switch back to non-root user
 USER argocd
 ARG HELM_SECRETS_VERSION=v3.10.0
