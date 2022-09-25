@@ -2,6 +2,10 @@ ARG ARGOCD_VERSION=v2.4.12
 
 ARG KSOPS_VERSION=v3.0.2
 
+ARG AZURE_CLI_VERSION=2.9.1
+
+FROM  mcr.microsoft.com/azure-cli:${AZURE_CLI_VERSION} as azure-cli
+
 FROM viaductoss/ksops:$KSOPS_VERSION as ksops-builder
 
 FROM argoproj/argocd:${ARGOCD_VERSION}
@@ -12,7 +16,7 @@ USER root
 # (e.g. curl, awscli, gpg, sops)
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends build-essential curl  awscli  gpg && \
+    apt-get install -y --no-install-recommends build-essential curl  awscli gpg && \
     rm -rf /var/lib/apt/lists/*
 
 ARG SOPS_VERSION=v3.7.3
@@ -29,6 +33,8 @@ ARG PKG_NAME=ksops
 
 # Override the default kustomize executable with the Go built version
 COPY --from=ksops-builder /go/bin/kustomize /usr/local/bin/kustomize
+
+COPY --from=azure-cli /usr/local/bin/az /usr/local/bin/az
 
 # Copy the plugin to kustomize plugin path
 COPY --from=ksops-builder /go/src/github.com/viaduct-ai/kustomize-sops/*  $KUSTOMIZE_PLUGIN_PATH/viaduct.ai/v1/${PKG_NAME}/
