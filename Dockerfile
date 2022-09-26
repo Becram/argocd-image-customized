@@ -2,6 +2,8 @@ ARG ARGOCD_VERSION=v2.4.12
 
 ARG KSOPS_VERSION=v3.0.2
 
+ARG HELM_VERSION=v3.10.0
+
 FROM viaductoss/ksops:$KSOPS_VERSION as ksops-builder
 
 FROM argoproj/argocd:${ARGOCD_VERSION}
@@ -34,10 +36,11 @@ COPY --from=ksops-builder /go/bin/kustomize /usr/local/bin/kustomize
 COPY --from=ksops-builder /go/src/github.com/viaduct-ai/kustomize-sops/*  $KUSTOMIZE_PLUGIN_PATH/viaduct.ai/v1/${PKG_NAME}/
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
-RUN az version
+# RUN curl -o /tmp/helm-linux-amd64.tar.gz https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz  && \
+#     tar -xvf /tmp/helm-linux-amd64.tar.gz && ls /tmp/
 # Switch back to non-root user
 USER argocd
-ARG HELM_SECRETS_VERSION=v3.10.0
+ARG HELM_SECRETS_VERSION=v3.8.1
 
 RUN helm plugin install https://github.com/jkroepke/helm-secrets --version ${HELM_SECRETS_VERSION}
 # helm secrets plugin should be installed as user argocd or it won't be found
