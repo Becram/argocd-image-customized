@@ -39,7 +39,7 @@ RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 # RUN curl -o /tmp/helm-linux-amd64.tar.gz https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz  && \
 #     tar -xvf /tmp/helm-linux-amd64.tar.gz && ls /tmp/
 # Switch back to non-root user
-USER argocd
+USER 999
 ARG HELM_SECRETS_VERSION=v3.8.1
 
 RUN helm plugin install https://github.com/jkroepke/helm-secrets --version ${HELM_SECRETS_VERSION}
